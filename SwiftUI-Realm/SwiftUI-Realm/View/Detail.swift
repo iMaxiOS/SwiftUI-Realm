@@ -24,27 +24,32 @@ struct Detail: View {
                 }
             }
             .listStyle(GroupedListStyle())
-            .navigationTitle("Detail")
+            .navigationTitle(dbModel.updateObject == nil ? "Add Data" : "Update")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(content: {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        
+                        dbModel.addData(presentation: presentation)
                     }, label: {
                         Text("Add Done")
                     })
                 }
-            })
-            .toolbar(content: {
+                
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        presentation.wrappedValue.dismiss()
+                        self.presentation.wrappedValue.dismiss()
                     }, label: {
                         Text("Cancel")
                     })
                 }
             })
         }
+        .onAppear(perform: {
+            dbModel.setUpInitialData()
+        })
+        .onDisappear(perform: {
+            dbModel.deInitData()
+        })
     }
 }
 
