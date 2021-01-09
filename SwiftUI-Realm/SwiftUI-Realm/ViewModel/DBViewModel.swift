@@ -9,7 +9,6 @@ import SwiftUI
 import RealmSwift
 
 class DBViewModel: ObservableObject {
-    
     @Published var title = ""
     @Published var detail = ""
     @Published var isPresent = false
