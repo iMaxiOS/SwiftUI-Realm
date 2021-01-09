@@ -22,53 +22,54 @@ class DBViewModel: ObservableObject {
     }
     
     func fetchData() {
-        guard let dbRef = try? Realm() else { return }
+        guard let dbRef = try? Realm() else{ return }
         
-        let result = dbRef.objects(Card.self)
-        
-        self.cards = result.compactMap { card in
+        let results = dbRef.objects(Card.self)
+        self.cards = results.compactMap({ (card) -> Card? in
             return card
-        }
+        })
     }
     
     func addData(presentation: Binding<PresentationMode>) {
+        if title == "" || detail == "" { return }
+        
         let card = Card()
         card.title = title
         card.detail = detail
         
-        guard let dbRef = try? Realm() else { return }
+        guard let dbRef = try? Realm() else{return}
         
         try? dbRef.write {
-            guard let availableItem = updateObject else {
+            guard let availableObject = updateObject else {
                 dbRef.add(card)
                 return
             }
             
-            availableItem.title = title
-            availableItem.detail = detail
+            availableObject.title = title
+            availableObject.detail = detail
         }
         
         fetchData()
         presentation.wrappedValue.dismiss()
     }
     
-    func deleteItem(item: Card) {
-        guard let dbRef = try? Realm() else { return }
+    func deleteItem(object: Card) {
+        guard let dbRef = try? Realm() else{return}
         
         try? dbRef.write {
-            dbRef.delete(item)
+            dbRef.delete(object)
             fetchData()
         }
     }
     
     func setUpInitialData() {
-        guard let updateItem = updateObject else { return }
-        
-        title = updateItem.title
-        detail = updateItem.detail
+        guard let updateData = updateObject else{ return }
+        title = updateData.title
+        detail = updateData.detail
     }
     
     func deInitData() {
+        updateObject = nil
         title = ""
         detail = ""
     }

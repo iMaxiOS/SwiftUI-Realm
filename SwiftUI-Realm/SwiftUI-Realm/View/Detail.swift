@@ -10,7 +10,7 @@ import SwiftUI
 struct Detail: View {
     
     @EnvironmentObject var dbModel: DBViewModel
-    @Environment(\.presentationMode) var presentation
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         NavigationView {
@@ -26,30 +26,26 @@ struct Detail: View {
             .listStyle(GroupedListStyle())
             .navigationTitle(dbModel.updateObject == nil ? "Add Data" : "Update")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar(content: {
+            .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: {
-                        dbModel.addData(presentation: presentation)
+                        dbModel.addData(presentation: presentationMode)
                     }, label: {
-                        Text("Add Done")
+                        Text("Done")
                     })
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button(action: {
-                        self.presentation.wrappedValue.dismiss()
+                        self.presentationMode.wrappedValue.dismiss()
                     }, label: {
                         Text("Cancel")
                     })
                 }
-            })
+            }
         }
-        .onAppear(perform: {
-            dbModel.setUpInitialData()
-        })
-        .onDisappear(perform: {
-            dbModel.deInitData()
-        })
+        .onAppear(perform: dbModel.setUpInitialData)
+        .onDisappear(perform: dbModel.deInitData)
     }
 }
 

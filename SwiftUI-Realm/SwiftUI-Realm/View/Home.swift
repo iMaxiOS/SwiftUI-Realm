@@ -33,7 +33,7 @@ struct Home: View {
                         .contentShape(RoundedRectangle(cornerRadius: 10))
                         .contextMenu(ContextMenu(menuItems: {
                             Button(action: {
-                                dbModel.deleteItem(item: card)
+                                dbModel.deleteItem(object: card)
                             }, label: {
                                 Text("Delete item")
                             })
@@ -59,11 +59,11 @@ struct Home: View {
                             .renderingMode(.template)
                             .foregroundColor(Color(.systemBlue))
                     })
-                    .sheet(isPresented: $dbModel.isPresent, content: {
-                        Detail()
-                            .environmentObject(dbModel)
-                    })
                 }
+            })
+            .sheet(isPresented: $dbModel.isPresent, content: {
+                Detail()
+                    .environmentObject(dbModel)
             })
         }
     }
